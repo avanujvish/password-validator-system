@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  */
 public class PasswordValidator {
 
+    //It can be revised based on the rule run in parallel
     public static final int N_THREADS = 3;
     public static final int MIN_PASS_LENGTH = 8;
     private final List<PasswordValidationRule> rules;
@@ -47,7 +48,7 @@ public class PasswordValidator {
                 rules.stream().filter(PasswordValidationRule::isMandatory)
                         .collect(Collectors.toList());
 
-        List<PasswordValidationRule> optionalRules =
+        List<PasswordValidationRule> otherRules =
                 rules.stream().filter(r -> !r.isMandatory())
                         .collect(Collectors.toList());
 
@@ -65,9 +66,21 @@ public class PasswordValidator {
                             }
                         }, executorService)).collect(Collectors.toList());
 
+        CompletableFuture<Boolean> allMandatory = CompletableFuture.allOf(
+                mandatoryFuture.toArray(new CompletableFuture[0])
+        ).thenApply(m -> mandatoryFuture.stream().
+                allMatch(CompletableFuture::join));
 
-        List<CompletableFuture<Boolean>> optionalFuture =
-                optionalRules.stream().map(rule ->
+        try {
+             if(!allMandatory.get())
+                 return false;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        List<CompletableFuture<Boolean>> otherFuture =
+                otherRules.stream().map(rule ->
                         CompletableFuture.supplyAsync(() -> {
                             try {
                                 rule.validatePassword(password);
@@ -77,18 +90,13 @@ public class PasswordValidator {
                             }
                         }, executorService)).collect(Collectors.toList());
 
-        CompletableFuture<Boolean> allMandatory = CompletableFuture.allOf(
-                mandatoryFuture.toArray(new CompletableFuture[0])
-        ).thenApply(m -> mandatoryFuture.stream().
-                allMatch(CompletableFuture::join));
-
-        CompletableFuture<Integer> optionalCount = CompletableFuture.allOf(
-                optionalFuture.toArray(new CompletableFuture[0])
-        ).thenApply(m -> (int) optionalFuture.stream().
+        CompletableFuture<Integer> otherCount = CompletableFuture.allOf(
+                otherFuture.toArray(new CompletableFuture[0])
+        ).thenApply(m -> (int) otherFuture.stream().
                 mapToInt(f -> f.join() ? 1 : 0).sum());
 
         try {
-            CompletableFuture<Boolean> future= allMandatory.thenCombine(optionalCount,(m,o)->m && o>=1);
+            CompletableFuture<Boolean> future= allMandatory.thenCombine(otherCount,(m,o)->m && o>=1);
             result= future.get();
             shutdown();
         } catch (Exception e) {
