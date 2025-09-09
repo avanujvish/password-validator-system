@@ -97,10 +97,6 @@ public class PasswordValidator {
         return result;
     }
 
-    public void updateMinLengthRule(int minLength){
-        rules.removeIf(rule->rule instanceof MinLengthRule);
-        rules.add(new MinLengthRule(minLength));
-    }
 
     public void shutdown(){
         executorService.shutdown();
