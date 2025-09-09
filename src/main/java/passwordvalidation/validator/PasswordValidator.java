@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * multiple validation rules.
  * @author anuj
  * @version 1.0
- * @since 2025-09-08
+ * @since 2025-09-09
  */
 public class PasswordValidator {
 
@@ -67,7 +67,7 @@ public class PasswordValidator {
 
 
         List<CompletableFuture<Boolean>> optionalFuture =
-                mandatoryRules.stream().map(rule ->
+                optionalRules.stream().map(rule ->
                         CompletableFuture.supplyAsync(() -> {
                             try {
                                 rule.validatePassword(password);
