@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
  * Rule implementation should validate password having the Minimum length based on Provided length in rules.
  * @author anuj
  * @version 1.0
- * @since 2025-09-08
+ * @since 2025-09-09
  */
 public class MinLengthRule implements PasswordValidationRule {
 

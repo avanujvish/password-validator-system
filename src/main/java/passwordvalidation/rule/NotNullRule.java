@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
  * Rule implementation should validate not null of the password.
  * @author anuj
  * @version 1.0
- * @since 2025-09-08
+ * @since 2025-09-09
  */
 public class NotNullRule implements PasswordValidationRule {
     @Override

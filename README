@@ -1,0 +1,64 @@
+##############################README####################
+
+Implementation follows the SOLID principles and provides a robust, flexible password
+validation system that meet all technical requirements while being easily
+extensible for future changes.
+
+Below are the benefits and features provided by the implemented functionality.
+
+#1# Rule Design
+1) Each validation rule is separate class implementing Password Validation Rule
+2) Easy to add/modify rules without changing ore logic
+3) Clear and separated implementation for each Functionality
+
+#2# Flexible Rule Engine
+1) Rule Categorized as mandatory vs optional
+2) Supports "3 out of 5" requirement with mandatory rule priority
+3) Dynamic rule modification (eg. Changing min length from 8 to 10)
+
+#3# Performance Optimization
+
+1) Async execution rules run in parallel using CompletableFuture
+2) Thread Pool configured executor service for concurrent validation
+3) Early termination Stops on mandatory rule failure
+
+#4#Exception Handling
+
+1) Each rule throws specific exceptions with clear messages
+2) Proper exception defined for all strict mode
+3) Easiest handling for validation rules
+
+
+#5# Structural Benefits
+
+1) Maintainable : Easy to add new rules or modify existing ones
+2) Testable : Each rule can be tested independently
+3) Configurable : Rules can be enable and disabled or modified at runtime
+4) Scalabale: Async execution reduce total validation time
+
+
+#6# Component
+
+1) PasswordValidationRule Interface
+
+The "PasswordValidationRule" interface defined the contract for all password validation
+rules in the system. It follows the enable flexible rule management and easy extensible.
+
+2) Rule Implementation
+
+Rule Implementation basically implement the   PasswordValidationRule Interface to define the
+rule with mandatory and nonmandatory functionality. Each implemented class allow to validated
+the password based on applied rules.
+
+
+3) Password Validator Component
+ The Password Validator is the main orchestrator that manages all
+ validation rules and provided different validation strategies.
+
+  i. Strict validation allowed the all validation must pass
+  ii.Flexible validation allowed
+  iii.Asynchronous validation for improve performance
+  iv. Dynamic Rule Modification
+
+  Note: Code commited as below repo
+  https://github.com/avanujvish/PasswordValidationDemo

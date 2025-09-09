@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * Rule implementation should validate password having the lowercase.
  * @author anuj
  * @version 1.0
- * @since 2025-09-08
+ * @since 2025-09-09
  */
 public class LowerCaseRule implements PasswordValidationRule {
     @Override
